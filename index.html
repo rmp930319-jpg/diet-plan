@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<!-- saved from url=(0056)file://twcorpfs66/Users/A0059/Downloads/diet_mobile.html -->
+<html lang="zh-Hant"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>瘦身計畫・8週</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+html,body{height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Noto Sans TC',sans-serif;background:#F2F4F7;color:#1a1a2e;font-size:15px}
+
+/* ── TOP BAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;background:#fff;border-bottom:1px solid #e8eaed;padding:env(safe-area-inset-top,0) 0 0}
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.tb-left{display:flex;flex-direction:column}
+.tb-title{font-size:17px;font-weight:700;color:#111}
+.tb-sub{font-size:12px;color:#888;margin-top:1px}
+.tb-right{display:flex;gap:6px}
+.pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.pill-g{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.pill-b{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+
+/* week strip */
+.wstrip{display:flex;overflow-x:auto;scrollbar-width:none;padding:8px 16px 10px;gap:7px;background:#fff;border-bottom:1px solid #e8eaed}
+.wstrip::-webkit-scrollbar{display:none}
+.wbtn{flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:7px 10px;border-radius:12px;border:1.5px solid #e8eaed;background:#fff;cursor:pointer;font-family:inherit;min-width:58px;transition:all .15s}
+.wbtn.on{background:#16a34a;border-color:#16a34a}
+.wbtn-n{font-size:11px;font-weight:700;color:#666}
+.wbtn.on .wbtn-n{color:#fff}
+.wbtn-kg{font-size:12px;font-weight:700;color:#333;margin-top:1px}
+.wbtn.on .wbtn-kg{color:#fff}
+.wbtn-sep{width:1px;background:#e8eaed;flex-shrink:0;margin:4px 0;border-radius:1px}
+
+/* ── SCROLL AREA ── */
+.scroll-area{position:fixed;top:0;left:0;right:0;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:24px}
+.scroll-inner{padding:0 12px 24px;max-width:600px;margin:0 auto}
+
+/* ── FOCUS CARD ── */
+.focus-card{background:#fff;border-radius:14px;padding:12px 14px;margin-bottom:10px;border-left:4px solid #16a34a}
+.focus-text{font-size:13px;color:#444;line-height:1.65}
+
+/* ── PHASE 2 BANNER ── */
+.p2{background:linear-gradient(135deg,#1d4ed8 0%,#3b82f6 100%);border-radius:14px;padding:14px;margin-bottom:10px;color:#fff}
+.p2-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.p2-sub{font-size:12px;opacity:.88;line-height:1.55}
+.p2-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.p2s{background:rgba(255,255,255,.18);border-radius:8px;padding:7px 4px;text-align:center}
+.p2s-l{font-size:9px;opacity:.85;display:block;margin-bottom:2px}
+.p2s-v{font-size:13px;font-weight:700}
+
+/* ── DAY CARD ── */
+.dc{background:#fff;border-radius:16px;margin-bottom:10px;overflow:hidden;border:1.5px solid #e8eaed}
+.dc.hol{border-color:#c4b5fd}
+.dc.exd{border-color:#86efac}
+
+/* day header — big touch target */
+.dh{display:flex;align-items:center;padding:14px 14px;min-height:64px;cursor:pointer;gap:10px;-webkit-user-select:none;user-select:none;background:#fff}
+.dc.hol .dh{background:linear-gradient(90deg,#f5f3ff 0%,#fff 60%)}
+.dc.exd .dh{background:linear-gradient(90deg,#f0fdf4 0%,#fff 60%)}
+
+.date-col{display:flex;flex-direction:column;min-width:52px}
+.date-n{font-size:22px;font-weight:800;color:#111;line-height:1}
+.date-w{font-size:11px;font-weight:600;margin-top:2px;color:#888}
+.dc.hol .date-w{color:#7c3aed}
+
+.mid-col{flex:1;display:flex;flex-direction:column;gap:4px}
+.tags{display:flex;gap:5px;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.t-work{background:#e0f2fe;color:#0369a1}
+.t-hol{background:#ede9fe;color:#6d28d9}
+.t-ex{background:#dcfce7;color:#15803d}
+.t-rest{background:#f3f4f6;color:#6b7280}
+.t-norice{background:#fef3c7;color:#92400e}
+
+.cal-row{display:flex;align-items:center;gap:6px}
+.meal-kcal{font-size:13px;font-weight:600;color:#2563eb}
+.burn-kcal{font-size:12px;font-weight:600;color:#16a34a}
+.net-kcal{font-size:11px;color:#888}
+
+.chev{font-size:22px;color:#ccc;transition:transform .22s;line-height:1;flex-shrink:0}
+.chev.op{transform:rotate(180deg)}
+
+/* day body */
+.db{display:none}
+.db.op{display:block}
+
+/* ── EXERCISE BLOCK ── */
+.exb{padding:12px 14px;border-bottom:1px solid #f0f0f0}
+.exb.run-t{background:#f0fdf4}
+.exb.walk-t{background:#eff6ff}
+.exb.wr-t{background:#f0fdf4}
+.exb.rest-t{background:#fafafa}
+.ex-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ex-ic{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ex-ic svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ex-ic.rest-c{background:#e5e7eb}
+.ex-ic.rest-c svg{stroke:#9ca3af}
+.ex-info{}
+.ex-name{font-size:14px;font-weight:700}
+.ex-time{font-size:11px;margin-top:1px;opacity:.75}
+.ex-chips{display:flex;gap:7px;flex-wrap:wrap}
+.exch{background:rgba(255,255,255,.9);border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:6px 11px}
+.exch-l{font-size:10px;color:#888;display:block;margin-bottom:2px}
+.exch-v{font-size:13px;font-weight:700;color:#111}
+.exch-v.burn{color:#15803d}
+.ex-note{font-size:12px;margin-top:7px;opacity:.8;line-height:1.5}
+
+/* ── MEAL ROW ── */
+.mr{display:flex;align-items:flex-start;gap:10px;padding:12px 14px}
+.mr+.mr{border-top:1px solid #f5f5f5}
+.mic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.mic svg{width:18px;height:18px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mb-ic{background:#fef3c7}.mb-ic svg{stroke:#92400e}
+.ml-ic{background:#d1fae5}.ml-ic svg{stroke:#065f46}
+.md-ic{background:#dbeafe}.md-ic svg{stroke:#1e40af}
+.ms-ic{background:#ede9fe}.ms-ic svg{stroke:#6d28d9}
+
+.mi{flex:1;min-width:0}
+.mlb{font-size:10px;font-weight:700;color:#aaa;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.mn{font-size:13.5px;color:#1a1a2e;line-height:1.5}
+.oat{display:inline-block;font-size:10px;background:#fce7f3;color:#9d174d;padding:1px 7px;border-radius:8px;margin-left:4px;font-weight:700;vertical-align:middle}
+.mm{display:flex;gap:6px;align-items:center;margin-top:4px;flex-wrap:wrap}
+.mkcal{font-size:12px;color:#888}
+.mtip{font-size:11px;color:#2563eb;display:flex;align-items:center;gap:3px}
+.mwarn{font-size:11px;color:#d97706;display:flex;align-items:center;gap:3px}
+.mtip svg,.mwarn svg{width:12px;height:12px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.mtip svg{stroke:#2563eb}.mwarn svg{stroke:#d97706}
+.skip-n{font-size:13px;color:#aaa;font-style:italic}
+
+/* ── DAY SUMMARY ── */
+.dsum{background:#fafafa;border-top:1px solid #f0f0f0;padding:10px 14px;display:flex;gap:12px;flex-wrap:wrap}
+.dsi{font-size:12px;color:#888;display:flex;align-items:center;gap:3px}
+.dsi b{color:#555}
+.dsi.net b{color:#15803d}
+
+/* ── LEGEND ── */
+.lgnd{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.lc{font-size:11px;color:#555;background:#fff;border:1px solid #e8eaed;border-radius:20px;padding:4px 10px;display:flex;align-items:center;gap:5px}
+.ldot{width:8px;height:8px;border-radius:50%}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="tb-left">
+      <div class="tb-title">瘦身計畫・8週全程</div>
+      <div class="tb-sub" id="tb-sub">7/6–7/12・目標 ~59 kg</div>
+    </div>
+    <div class="tb-right">
+      <span class="pill pill-g">−7 kg</span>
+      <span class="pill pill-b">8 週</span>
+    </div>
+  </div>
+  <!-- week strip -->
+  <div class="wstrip" id="wstrip"><button class="wbtn on" id="wb0"><span class="wbtn-n">第1週</span><span class="wbtn-kg">~59 kg</span></button><button class="wbtn" id="wb1"><span class="wbtn-n">第2週</span><span class="wbtn-kg">~58 kg</span></button><button class="wbtn" id="wb2"><span class="wbtn-n">第3週</span><span class="wbtn-kg">~57 kg</span></button><button class="wbtn" id="wb3"><span class="wbtn-n">第4週</span><span class="wbtn-kg">~56 kg</span></button><div class="wbtn-sep"></div><button class="wbtn" id="wb4"><span class="wbtn-n">第5週</span><span class="wbtn-kg">~55.5 kg</span></button><button class="wbtn" id="wb5"><span class="wbtn-n">第6週</span><span class="wbtn-kg">~55 kg</span></button><button class="wbtn" id="wb6"><span class="wbtn-n">第7週</span><span class="wbtn-kg">~54 kg</span></button><button class="wbtn" id="wb7"><span class="wbtn-n">第8週</span><span class="wbtn-kg">~53 kg</span></button></div>
+</div>
+
+<!-- SCROLL AREA (padding-top set by JS) -->
+<div class="scroll-area" id="scroll-area" style="padding-top: 137px;">
+  <div class="scroll-inner" id="scroll-inner"><div class="lgnd">
+      <div class="lc"><div class="ldot" style="background:#16a34a"></div>運動日</div>
+      <div class="lc"><div class="ldot" style="background:#7c3aed"></div>假日</div>
+      <div class="lc"><div class="ldot" style="background:#9d174d"></div>義美燕麥</div>
+      <div class="lc"><div class="ldot" style="background:#d97706"></div>薯條注意</div>
+      <div class="lc" style="color:#aaa">← 左右滑動換週 →</div>
+    </div><div class="focus-card"><div class="focus-text">建立習慣：健走×3天，下班後17:30出發，義美燕麥輪替早餐，午餐飯量半碗。</div></div><div class="dc exd">
+    <div class="dh" onclick="tog(&#39;d0_0&#39;)">
+      <div class="date-col">
+        <div class="date-n">7/6</div>
+        <div class="date-w">一</div>
+      </div>
+      <div class="mid-col">
+        <div class="tags"><span class="tag t-work">上班</span><span class="tag t-ex">健走</span></div>
+        <div class="cal-row">
+          <span class="meal-kcal">1150 kcal</span>
+          <span class="burn-kcal">−120🔥</span><span class="net-kcal">淨 1030</span>
+        </div>
+      </div>
+      <div class="chev op" id="cvd0_0">▾</div>
+    </div>
+    <div class="db op" id="dbd0_0">
+      <div class="exb walk-t">
+    <div class="ex-row">
+      <div class="ex-ic" style="background:#2563eb"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"></circle><path d="M9 19l1.5-6L8 11l2-5"></path><path d="M14 19l-1-4 2-3"></path><path d="M8 11l-2 4"></path><path d="M15 12l2 3"></path></svg></div>
+      <div class="ex-info">
+        <div class="ex-name" style="color:#1d4ed8">健走</div>
+        <div class="ex-time" style="color:#1d4ed8">17:30–18:00 下班後</div>
+      </div>
+    </div>
+    <div class="ex-chips">
+      <div class="exch"><span class="exch-l">時間</span><span class="exch-v">30 分鐘</span></div>
+      <div class="exch"><span class="exch-l">消耗</span><span class="exch-v burn">−120 kcal</span></div>
+    </div>
+    <div class="ex-note" style="color:#1d4ed8">輕鬆步伐，習慣出門就好</div>
+  </div>
+      <div class="mr">
+    <div class="mic mb-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></div>
+    <div class="mi">
+      <div class="mlb">早餐</div>
+      <div class="mn">義美燕麥（草莓）50g＋鮮奶200ml<span class="oat">義美燕麥</span></div>
+      <div class="mm"><span class="mkcal">330 kcal</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic ml-ic"><svg viewBox="0 0 24 24"><path d="M2.27 21.7s9.87-3.5 14.14-7.77 1.51-10.27-3.17-5.59S2.27 21.7 2.27 21.7z"></path><path d="M8.5 2.4C8.5 2.4 12 4.5 12 8c0 0 4-1 4.5-4.5"></path><path d="M12 8c0 0 3 1.5 6-1"></path></svg></div>
+    <div class="mi">
+      <div class="mlb">午餐</div>
+      <div class="mn">自助餐：糙米飯半碗＋燙青菜×2＋滷雞腿（去皮）</div>
+      <div class="mm"><span class="mkcal">420 kcal</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic md-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+    <div class="mi">
+      <div class="mlb">晚餐</div>
+      <div class="mn">家裡：白飯半碗＋2樣菜＋清湯</div>
+      <div class="mm"><span class="mkcal">400 kcal</span></div>
+    </div>
+  </div>
+      <div class="dsum">
+    <span class="dsi">飲食 <b>1150 kcal</b></span>
+    <span class="dsi">消耗 <b>−120 kcal</b></span><span class="dsi net">淨攝入 <b>1030 kcal</b></span>
+  </div>
+    </div>
+  </div><div class="dc">
+    <div class="dh" onclick="tog(&#39;d0_1&#39;)">
+      <div class="date-col">
+        <div class="date-n">7/7</div>
+        <div class="date-w">二</div>
+      </div>
+      <div class="mid-col">
+        <div class="tags"><span class="tag t-work">上班</span><span class="tag t-rest">休息</span></div>
+        <div class="cal-row">
+          <span class="meal-kcal">1020 kcal</span>
+          
+        </div>
+      </div>
+      <div class="chev" id="cvd0_1">▾</div>
+    </div>
+    <div class="db" id="dbd0_1">
+      <div class="exb rest-t" style="display:flex;align-items:center;gap:10px;padding:12px 14px"><div class="ex-ic rest-c"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><path d="M2 12h5l2-8 4 16 2-8h5"></path></svg></div><span style="font-size:13px;color:#9ca3af">今日休息・恢復同樣重要</span></div>
+      <div class="mr">
+    <div class="mic mb-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></div>
+    <div class="mi">
+      <div class="mlb">早餐</div>
+      <div class="mn">茶葉蛋×2＋無糖豆漿250ml＋無糖麥茶</div>
+      <div class="mm"><span class="mkcal">210 kcal</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic ml-ic"><svg viewBox="0 0 24 24"><path d="M2.27 21.7s9.87-3.5 14.14-7.77 1.51-10.27-3.17-5.59S2.27 21.7 2.27 21.7z"></path><path d="M8.5 2.4C8.5 2.4 12 4.5 12 8c0 0 4-1 4.5-4.5"></path><path d="M12 8c0 0 3 1.5 6-1"></path></svg></div>
+    <div class="mi">
+      <div class="mlb">午餐</div>
+      <div class="mn">便當：糙米飯半碗＋烤魚＋燙青菜×2</div>
+      <div class="mm"><span class="mkcal">410 kcal</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic md-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+    <div class="mi">
+      <div class="mlb">晚餐</div>
+      <div class="mn">家裡：白飯半碗＋2樣菜＋清湯</div>
+      <div class="mm"><span class="mkcal">400 kcal</span></div>
+    </div>
+  </div>
+      <div class="dsum">
+    <span class="dsi">飲食 <b>1020 kcal</b></span>
+    
+  </div>
+    </div>
+  </div><div class="dc exd">
+    <div class="dh" onclick="tog(&#39;d0_2&#39;)">
+      <div class="date-col">
+        <div class="date-n">7/8</div>
+        <div class="date-w">三</div>
+      </div>
+      <div class="mid-col">
+        <div class="tags"><span class="tag t-work">上班</span><span class="tag t-ex">健走</span></div>
+        <div class="cal-row">
+          <span class="meal-kcal">1090 kcal</span>
+          <span class="burn-kcal">−120🔥</span><span class="net-kcal">淨 970</span>
+        </div>
+      </div>
+      <div class="chev" id="cvd0_2">▾</div>
+    </div>
+    <div class="db" id="dbd0_2">
+      <div class="exb walk-t">
+    <div class="ex-row">
+      <div class="ex-ic" style="background:#2563eb"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"></circle><path d="M9 19l1.5-6L8 11l2-5"></path><path d="M14 19l-1-4 2-3"></path><path d="M8 11l-2 4"></path><path d="M15 12l2 3"></path></svg></div>
+      <div class="ex-info">
+        <div class="ex-name" style="color:#1d4ed8">健走</div>
+        <div class="ex-time" style="color:#1d4ed8">17:30–18:00 下班後</div>
+      </div>
+    </div>
+    <div class="ex-chips">
+      <div class="exch"><span class="exch-l">時間</span><span class="exch-v">30 分鐘</span></div>
+      <div class="exch"><span class="exch-l">消耗</span><span class="exch-v burn">−120 kcal</span></div>
+    </div>
+    <div class="ex-note" style="color:#1d4ed8">路線繞公園一圈</div>
+  </div>
+      <div class="mr">
+    <div class="mic mb-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></div>
+    <div class="mi">
+      <div class="mlb">早餐</div>
+      <div class="mn">鮪魚御飯糰×1＋茶葉蛋×1＋無糖青茶</div>
+      <div class="mm"><span class="mkcal">270 kcal</span><span class="mtip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>鮪魚口味</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic ml-ic"><svg viewBox="0 0 24 24"><path d="M2.27 21.7s9.87-3.5 14.14-7.77 1.51-10.27-3.17-5.59S2.27 21.7 2.27 21.7z"></path><path d="M8.5 2.4C8.5 2.4 12 4.5 12 8c0 0 4-1 4.5-4.5"></path><path d="M12 8c0 0 3 1.5 6-1"></path></svg></div>
+    <div class="mi">
+      <div class="mlb">午餐</div>
+      <div class="mn">自助餐：糙米飯半碗＋青菜×2＋炒豆干</div>
+      <div class="mm"><span class="mkcal">420 kcal</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic md-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+    <div class="mi">
+      <div class="mlb">晚餐</div>
+      <div class="mn">家裡：白飯半碗＋2樣菜＋清湯</div>
+      <div class="mm"><span class="mkcal">400 kcal</span></div>
+    </div>
+  </div>
+      <div class="dsum">
+    <span class="dsi">飲食 <b>1090 kcal</b></span>
+    <span class="dsi">消耗 <b>−120 kcal</b></span><span class="dsi net">淨攝入 <b>970 kcal</b></span>
+  </div>
+    </div>
+  </div><div class="dc">
+    <div class="dh" onclick="tog(&#39;d0_3&#39;)">
+      <div class="date-col">
+        <div class="date-n">7/9</div>
+        <div class="date-w">四</div>
+      </div>
+      <div class="mid-col">
+        <div class="tags"><span class="tag t-work">上班</span><span class="tag t-rest">休息</span></div>
+        <div class="cal-row">
+          <span class="meal-kcal">1095 kcal</span>
+          
+        </div>
+      </div>
+      <div class="chev" id="cvd0_3">▾</div>
+    </div>
+    <div class="db" id="dbd0_3">
+      <div class="exb rest-t" style="display:flex;align-items:center;gap:10px;padding:12px 14px"><div class="ex-ic rest-c"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><path d="M2 12h5l2-8 4 16 2-8h5"></path></svg></div><span style="font-size:13px;color:#9ca3af">今日休息・恢復同樣重要</span></div>
+      <div class="mr">
+    <div class="mic mb-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></div>
+    <div class="mi">
+      <div class="mlb">早餐</div>
+      <div class="mn">義美燕麥（草莓）50g＋鮮奶200ml<span class="oat">義美燕麥</span></div>
+      <div class="mm"><span class="mkcal">330 kcal</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic ml-ic"><svg viewBox="0 0 24 24"><path d="M2.27 21.7s9.87-3.5 14.14-7.77 1.51-10.27-3.17-5.59S2.27 21.7 2.27 21.7z"></path><path d="M8.5 2.4C8.5 2.4 12 4.5 12 8c0 0 4-1 4.5-4.5"></path><path d="M12 8c0 0 3 1.5 6-1"></path></svg></div>
+    <div class="mi">
+      <div class="mlb">午餐</div>
+      <div class="mn">清湯麵食＋燙青菜＋滷豆腐</div>
+      <div class="mm"><span class="mkcal">365 kcal</span><span class="mtip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>選清湯</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic md-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+    <div class="mi">
+      <div class="mlb">晚餐</div>
+      <div class="mn">家裡：白飯半碗＋2樣菜＋清湯</div>
+      <div class="mm"><span class="mkcal">400 kcal</span></div>
+    </div>
+  </div>
+      <div class="dsum">
+    <span class="dsi">飲食 <b>1095 kcal</b></span>
+    
+  </div>
+    </div>
+  </div><div class="dc exd">
+    <div class="dh" onclick="tog(&#39;d0_4&#39;)">
+      <div class="date-col">
+        <div class="date-n">7/10</div>
+        <div class="date-w">五</div>
+      </div>
+      <div class="mid-col">
+        <div class="tags"><span class="tag t-work">上班</span><span class="tag t-ex">健走</span></div>
+        <div class="cal-row">
+          <span class="meal-kcal">1030 kcal</span>
+          <span class="burn-kcal">−120🔥</span><span class="net-kcal">淨 910</span>
+        </div>
+      </div>
+      <div class="chev" id="cvd0_4">▾</div>
+    </div>
+    <div class="db" id="dbd0_4">
+      <div class="exb walk-t">
+    <div class="ex-row">
+      <div class="ex-ic" style="background:#2563eb"><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"></circle><path d="M9 19l1.5-6L8 11l2-5"></path><path d="M14 19l-1-4 2-3"></path><path d="M8 11l-2 4"></path><path d="M15 12l2 3"></path></svg></div>
+      <div class="ex-info">
+        <div class="ex-name" style="color:#1d4ed8">健走</div>
+        <div class="ex-time" style="color:#1d4ed8">17:30–18:00 下班後</div>
+      </div>
+    </div>
+    <div class="ex-chips">
+      <div class="exch"><span class="exch-l">時間</span><span class="exch-v">30 分鐘</span></div>
+      <div class="exch"><span class="exch-l">消耗</span><span class="exch-v burn">−120 kcal</span></div>
+    </div>
+    <div class="ex-note" style="color:#1d4ed8">週五輕鬆走</div>
+  </div>
+      <div class="mr">
+    <div class="mic mb-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></div>
+    <div class="mi">
+      <div class="mlb">早餐</div>
+      <div class="mn">茶葉蛋×2＋無糖豆漿250ml＋無糖麥茶</div>
+      <div class="mm"><span class="mkcal">210 kcal</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic ml-ic"><svg viewBox="0 0 24 24"><path d="M2.27 21.7s9.87-3.5 14.14-7.77 1.51-10.27-3.17-5.59S2.27 21.7 2.27 21.7z"></path><path d="M8.5 2.4C8.5 2.4 12 4.5 12 8c0 0 4-1 4.5-4.5"></path><path d="M12 8c0 0 3 1.5 6-1"></path></svg></div>
+    <div class="mi">
+      <div class="mlb">午餐</div>
+      <div class="mn">自助餐：糙米飯半碗＋青菜×2＋雞胸肉</div>
+      <div class="mm"><span class="mkcal">420 kcal</span></div>
+    </div>
+  </div>
+      <div class="mr">
+    <div class="mic md-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+    <div class="mi">
+      <div class="mlb">晚餐</div>
+      <div class="mn">家裡：白飯半碗＋2樣菜＋清湯</div>
+      <div class="mm"><span class="mkcal">400 kcal</span></div>
+    </div>
+  </div>
+      <div class="dsum">
+    <span class="dsi">飲食 <b>1030 kcal</b></span>
+    <span class="dsi">消耗 <b>−120 kcal</b></span><span class="dsi net">淨攝入 <b>910 kcal</b></span>
+  </div>
+    </div>
+  </div><div class="dc hol exd">
+    <div class="dh" onclick="tog(&#39;d0_5&#39;)">
+      <div class="date-col">
+        <div class="date-n">7/11</div>
+        <div class="date-w">六</div>
+      </div>
+      <div class="mid-col">
+        <div class="tags"><span class="tag t-hol">假日</span><span class="tag t-ex">健走＋慢跑</span></div>
+        <div class="cal-row">
+          <span class="meal-kcal">940 kcal</span>
+          <span class="burn-kcal">−175🔥</span><span class="net-kcal">淨 765</span>
+        </div>
+      </div>
+      <div class="chev" id="cvd0_5">▾</div>
+    </div>
+    <div class="db" id="dbd0_5">
+      <div class="exb wr-t">
+    <div class="ex-row">
+      <div class="ex-ic" style="background:#16a34a"><svg viewBox="0 0 24 24"><circle cx="13" cy="4" r="1.5"></circle><path d="M9 20l2-7 2 3 3-4 3 1"></path><path d="M5 12l3-3 4 1 3-3"></path></svg></div>
+      <div class="ex-info">
+        <div class="ex-name" style="color:#15803d">健走＋慢跑</div>
+        <div class="ex-time" style="color:#15803d">08:00 早晨</div>
+      </div>
+    </div>
+    <div class="ex-chips">
+      <div class="exch"><span class="exch-l">時間</span><span class="exch-v">40 分鐘</span></div>
+      <div class="exch"><span class="exch-l">消耗</span><span class="exch-v burn">−175 kcal</span></div>
+    </div>
+    <div class="ex-note" style="color:#15803d">健走15→慢跑10→健走15分</div>
+  </div>
+      <div class="mr">
+    <div class="mic mb-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></div>
+    <div class="mi">
+      <div class="mlb">早餐</div>
+      <div class="mn">義美燕麥（草莓）50g＋鮮奶200ml<span class="oat">義美燕麥</span></div>
+      <div class="mm"><span class="mkcal">330 kcal</span><span class="mtip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>運動後再吃</span></div>
+    </div>
+  </div>
+      <div class="mr"><div class="mic ms-ic"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></div><div class="mi"><div class="mlb">午餐</div><div class="skip-n">假日不吃 ｜ 餓了：茶葉蛋×1（≈70 kcal）</div></div></div>
+      <div class="mr">
+    <div class="mic md-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+    <div class="mi">
+      <div class="mlb">晚餐</div>
+      <div class="mn">麥當勞：鱈魚堡＋薯條（分食）＋檸檬紅茶</div>
+      <div class="mm"><span class="mkcal">610 kcal</span><span class="mwarn"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>薯條分食省 ≈170 kcal</span></div>
+    </div>
+  </div>
+      <div class="dsum">
+    <span class="dsi">飲食 <b>940 kcal</b></span>
+    <span class="dsi">消耗 <b>−175 kcal</b></span><span class="dsi net">淨攝入 <b>765 kcal</b></span>
+  </div>
+    </div>
+  </div><div class="dc hol">
+    <div class="dh" onclick="tog(&#39;d0_6&#39;)">
+      <div class="date-col">
+        <div class="date-n">7/12</div>
+        <div class="date-w">日</div>
+      </div>
+      <div class="mid-col">
+        <div class="tags"><span class="tag t-hol">假日</span><span class="tag t-rest">休息</span></div>
+        <div class="cal-row">
+          <span class="meal-kcal">770 kcal</span>
+          
+        </div>
+      </div>
+      <div class="chev" id="cvd0_6">▾</div>
+    </div>
+    <div class="db" id="dbd0_6">
+      <div class="exb rest-t" style="display:flex;align-items:center;gap:10px;padding:12px 14px"><div class="ex-ic rest-c"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><path d="M2 12h5l2-8 4 16 2-8h5"></path></svg></div><span style="font-size:13px;color:#9ca3af">今日休息・恢復同樣重要</span></div>
+      <div class="mr">
+    <div class="mic mb-ic"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg></div>
+    <div class="mi">
+      <div class="mlb">早餐</div>
+      <div class="mn">茶葉蛋×2＋無糖豆漿250ml＋無糖麥茶</div>
+      <div class="mm"><span class="mkcal">210 kcal</span><span class="mtip"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>量體重！第1週成果</span></div>
+    </div>
+  </div>
+      <div class="mr"><div class="mic ms-ic"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></div><div class="mi"><div class="mlb">午餐</div><div class="skip-n">假日不吃 ｜ 餓了：茶葉蛋×1（≈70 kcal）</div></div></div>
+      <div class="mr">
+    <div class="mic md-ic"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg></div>
+    <div class="mi">
+      <div class="mlb">晚餐</div>
+      <div class="mn">丹丹漢堡：漢堡＋無糖飲料（不點薯條）</div>
+      <div class="mm"><span class="mkcal">560 kcal</span><span class="mwarn"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>薯條不點省 ≈280 kcal</span></div>
+    </div>
+  </div>
+      <div class="dsum">
+    <span class="dsi">飲食 <b>770 kcal</b></span>
+    
+  </div>
+    </div>
+  </div></div>
+</div>
+
+<script>
+// ── ICONS ─────────────────────────────────────────
+const I={
+  coffee:`<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>`,
+  salad:`<svg viewBox="0 0 24 24"><path d="M2.27 21.7s9.87-3.5 14.14-7.77 1.51-10.27-3.17-5.59S2.27 21.7 2.27 21.7z"/><path d="M8.5 2.4C8.5 2.4 12 4.5 12 8c0 0 4-1 4.5-4.5"/><path d="M12 8c0 0 3 1.5 6-1"/></svg>`,
+  home:`<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+  moon:`<svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+  run:`<svg viewBox="0 0 24 24"><circle cx="13" cy="4" r="1.5"/><path d="M9 20l2-7 2 3 3-4 3 1"/><path d="M5 12l3-3 4 1 3-3"/></svg>`,
+  walk:`<svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><path d="M9 19l1.5-6L8 11l2-5"/><path d="M14 19l-1-4 2-3"/><path d="M8 11l-2 4"/><path d="M15 12l2 3"/></svg>`,
+  info:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  warn:`<svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+};
+
+// ── DATA HELPERS ──────────────────────────────────
+const OAT =(t)=>({t:"義美燕麥（草莓）50g＋鮮奶200ml",c:330,oat:1,tip:t||""});
+const TUNA=(t)=>({t:"鮪魚御飯糰×1＋茶葉蛋×1＋無糖青茶",c:270,tip:t||""});
+const EGG =(t)=>({t:"茶葉蛋×2＋無糖豆漿250ml＋無糖麥茶",c:210,tip:t||""});
+const SWEET=(t)=>({t:"地瓜（中）×1＋茶葉蛋×1＋無糖麥茶",c:225,tip:t||""});
+const HOME=(w)=>({t:"家裡：白飯半碗＋2樣菜＋清湯",c:400,warn:w||""});
+const MCD =(w)=>({t:"麥當勞：鱈魚堡＋薯條（分食）＋檸檬紅茶",c:610,warn:w||"薯條分食省 ≈170 kcal"});
+const DAN =(w)=>({t:"丹丹漢堡：漢堡＋無糖飲料（不點薯條）",c:560,warn:w||"薯條不點省 ≈280 kcal"});
+const LH=(s,w)=>({t:`自助餐：糙米飯${s}＋${w}`,c:s==="半碗"?420:s==="1/3碗"?395:370});
+const LNR=(p)=>({t:`自助餐（無飯）：燙青菜×3＋${p}`,c:310,tip:"無澱粉午餐",norice:1});
+const LB=(s,p)=>({t:`便當：糙米飯${s}＋${p}`,c:s==="半碗"?410:s==="1/3碗"?385:360});
+const LN=(p)=>({t:`清湯麵食＋${p}`,c:365,tip:"選清湯"});
+const REST={type:"rest",label:"休息",dur:0,burn:0,time:"",note:""};
+const W=(m,b,t,am)=>({type:"walk",label:"健走",dur:m,burn:b,time:am?`07:30–08:00 早晨`:`17:30–18:00 下班後`,note:t||""});
+const WR=(t)=>({type:"wr",label:"健走＋慢跑",dur:35,burn:155,time:"17:30–18:05 下班後",note:t||""});
+const R=(m,b,t,am)=>({type:"run",label:"慢跑",dur:m,burn:b,time:am?`07:30 早晨`:`17:30 下班後`,note:t||""});
+
+// ── ALL 8 WEEKS ────────────────────────────────────
+const FOCUS=[
+  "建立習慣：健走×3天，下班後17:30出發，義美燕麥輪替早餐，午餐飯量半碗。",
+  "加入慢跑：健走＋慢跑交替×4天，午餐降至1/3碗，身體開始感受變化。",
+  "慢跑為主：每週4–5天，跑步時間拉長，午餐1/3碗，蛋白質強化。",
+  "第一個月衝刺：午餐降至1/4碗，8/2（日）早上量體重驗收！",
+  "第二個月啟動：慢跑40分連跑×4天，部分日改無澱粉午餐。",
+  "穩定燃脂：慢跑40–45分，週六長跑55分，飲食維持低碳。",
+  "加速衝刺：慢跑45分×5天，週六長跑60分，部分午餐純蛋白質＋青菜。",
+  "最後一哩路：慢跑45–50分，8/30（日）最終量體重，目標53 kg達標！"
+];
+const WMETA=[
+  {w:"第1週",d:"7/6–7/12",kg:"~59 kg"},
+  {w:"第2週",d:"7/13–7/19",kg:"~58 kg"},
+  {w:"第3週",d:"7/20–7/26",kg:"~57 kg"},
+  {w:"第4週",d:"7/27–8/2",kg:"~56 kg"},
+  {w:"第5週",d:"8/3–8/9",kg:"~55.5 kg"},
+  {w:"第6週",d:"8/10–8/16",kg:"~55 kg"},
+  {w:"第7週",d:"8/17–8/23",kg:"~54 kg"},
+  {w:"第8週",d:"8/24–8/30",kg:"~53 kg"},
+];
+const WEEKS=[
+  // W1
+  [{dt:"7/6",dw:"一",hol:0,ex:W(30,120,"輕鬆步伐，習慣出門就好"),b:OAT(),l:LH("半碗","燙青菜×2＋滷雞腿（去皮）"),d:HOME()},
+   {dt:"7/7",dw:"二",hol:0,ex:REST,b:EGG(),l:LB("半碗","烤魚＋燙青菜×2"),d:HOME()},
+   {dt:"7/8",dw:"三",hol:0,ex:W(30,120,"路線繞公園一圈"),b:TUNA("鮪魚口味"),l:LH("半碗","青菜×2＋炒豆干"),d:HOME()},
+   {dt:"7/9",dw:"四",hol:0,ex:REST,b:OAT(),l:LN("燙青菜＋滷豆腐"),d:HOME()},
+   {dt:"7/10",dw:"五",hol:0,ex:W(30,120,"週五輕鬆走"),b:EGG(),l:LH("半碗","青菜×2＋雞胸肉"),d:HOME()},
+   {dt:"7/11",dw:"六",hol:1,ex:{type:"wr",label:"健走＋慢跑",dur:40,burn:175,time:"08:00 早晨",note:"健走15→慢跑10→健走15分"},b:OAT("運動後再吃"),l:null,d:MCD()},
+   {dt:"7/12",dw:"日",hol:1,ex:REST,b:EGG("量體重！第1週成果"),l:null,d:DAN()}],
+  // W2
+  [{dt:"7/13",dw:"一",hol:0,ex:WR("健走10→慢跑15→健走10分"),b:OAT(),l:LH("1/3碗","燙青菜×3＋滷雞腿（去皮）"),d:HOME()},
+   {dt:"7/14",dw:"二",hol:0,ex:REST,b:EGG(),l:LB("1/3碗","蒸魚＋燙青菜×2"),d:HOME()},
+   {dt:"7/15",dw:"三",hol:0,ex:WR("慢跑段拉長到20分鐘"),b:TUNA(),l:LH("1/3碗","青菜×2＋豆腐＋炒蛋"),d:HOME()},
+   {dt:"7/16",dw:"四",hol:0,ex:W(30,120,"輕鬆恢復日"),b:OAT(),l:LN("燙青菜＋滷豆腐"),d:HOME()},
+   {dt:"7/17",dw:"五",hol:0,ex:WR("週五最後一練"),b:EGG(),l:LH("1/3碗","青菜×3＋雞胸肉"),d:HOME()},
+   {dt:"7/18",dw:"六",hol:1,ex:R(40,260,"第一次連跑40分，配速輕鬆",1),b:OAT("跑完補充"),l:null,d:DAN()},
+   {dt:"7/19",dw:"日",hol:1,ex:W(30,120,"量體重後散步",1),b:TUNA("量體重！第2週成果"),l:null,d:MCD()}],
+  // W3
+  [{dt:"7/20",dw:"一",hol:0,ex:R(30,200,"連續慢跑30分"),b:OAT(),l:LH("1/3碗","青菜×2＋雞胸肉＋豆腐"),d:HOME()},
+   {dt:"7/21",dw:"二",hol:0,ex:REST,b:EGG(),l:LB("1/3碗","清蒸魚＋青菜×2"),d:HOME()},
+   {dt:"7/22",dw:"三",hol:0,ex:R(30,200,"試著比上次快10秒/公里"),b:TUNA(),l:LH("1/3碗","青菜×2＋炒蛋＋滷豆干"),d:HOME()},
+   {dt:"7/23",dw:"四",hol:0,ex:W(30,120,"慢跑後輕鬆恢復日"),b:OAT(),l:LN("燙青菜＋豆腐"),d:HOME()},
+   {dt:"7/24",dw:"五",hol:0,ex:R(30,200,"週五三練達標！"),b:EGG(),l:LH("1/3碗","青菜×3＋雞腿（去皮）"),d:HOME()},
+   {dt:"7/25",dw:"六",hol:1,ex:R(45,295,"週六長跑45分！",1),b:OAT("跑完30分後補充"),l:null,d:MCD()},
+   {dt:"7/26",dw:"日",hol:1,ex:W(30,120,"量體重後散步",1),b:TUNA("量體重！第3週成果"),l:null,d:DAN()}],
+  // W4
+  [{dt:"7/27",dw:"一",hol:0,ex:R(35,230,"最後衝刺，多跑5分鐘"),b:OAT(),l:LH("1/4碗","青菜×3＋雞胸肉＋豆腐"),d:HOME()},
+   {dt:"7/28",dw:"二",hol:0,ex:W(30,120,"恢復日"),b:EGG(),l:LB("1/4碗","蒸魚＋青菜×3"),d:HOME()},
+   {dt:"7/29",dw:"三",hol:0,ex:R(35,230,"中段強化，穩定配速"),b:TUNA(),l:LH("1/4碗","青菜×3＋雞胸肉"),d:HOME()},
+   {dt:"7/30",dw:"四",hol:0,ex:REST,b:OAT(),l:LH("1/4碗","青菜×3＋豆腐＋炒蛋"),d:HOME()},
+   {dt:"7/31",dw:"五",hol:0,ex:R(35,230,"月底最後一跑！"),b:EGG(),l:LB("1/4碗","烤雞腿（去皮）＋青菜×2"),d:HOME()},
+   {dt:"8/1",dw:"六",hol:1,ex:R(50,330,"月底長跑50分！",1),b:OAT("跑完好好補充"),l:null,d:DAN()},
+   {dt:"8/2",dw:"日",hol:1,ex:W(30,120,"空腹健走，一個月驗收！",1),b:TUNA("早上空腹量體重！一個月驗收"),l:null,d:MCD("辛苦了！薯條可多一點慶祝")}],
+  // W5
+  [{dt:"8/3",dw:"一",hol:0,ex:R(40,260,"第二個月開跑！連跑40分"),b:OAT(),l:LH("1/4碗","青菜×3＋雞胸肉＋豆腐"),d:HOME()},
+   {dt:"8/4",dw:"二",hol:0,ex:REST,b:EGG(),l:LB("1/4碗","清蒸魚＋青菜×3"),d:HOME()},
+   {dt:"8/5",dw:"三",hol:0,ex:R(40,260,"連跑40分，感受體力進步"),b:TUNA(),l:LNR("雞胸肉＋炒蛋＋豆腐"),d:HOME()},
+   {dt:"8/6",dw:"四",hol:0,ex:W(30,120,"恢復日，放鬆雙腿"),b:OAT(),l:LH("1/4碗","青菜×3＋滷雞腿（去皮）"),d:HOME()},
+   {dt:"8/7",dw:"五",hol:0,ex:R(40,260,"週五40分，越跑越輕鬆"),b:EGG(),l:LH("1/4碗","青菜×3＋雞胸肉"),d:HOME()},
+   {dt:"8/8",dw:"六",hol:1,ex:R(55,360,"長跑提升至55分！",1),b:OAT("長跑後補充"),l:null,d:MCD()},
+   {dt:"8/9",dw:"日",hol:1,ex:W(30,120,"量體重！目標~55.5 kg",1),b:TUNA("量體重！第5週成果"),l:null,d:DAN()}],
+  // W6
+  [{dt:"8/10",dw:"一",hol:0,ex:R(40,260,"穩定燃脂週，維持40分"),b:OAT(),l:LNR("雞胸肉＋豆腐＋炒蛋"),d:HOME()},
+   {dt:"8/11",dw:"二",hol:0,ex:REST,b:EGG(),l:LB("1/4碗","烤魚＋青菜×3"),d:HOME()},
+   {dt:"8/12",dw:"三",hol:0,ex:R(40,260,"中段補跑，節奏穩了"),b:TUNA(),l:LH("1/4碗","青菜×3＋雞胸肉＋豆腐"),d:HOME()},
+   {dt:"8/13",dw:"四",hol:0,ex:W(30,120,"輕鬆走，調整狀態"),b:OAT(),l:LNR("滷雞腿（去皮）＋燙青菜×3"),d:HOME()},
+   {dt:"8/14",dw:"五",hol:0,ex:R(40,260,"週五燃脂！"),b:EGG(),l:LH("1/4碗","青菜×3＋雞胸肉"),d:HOME()},
+   {dt:"8/15",dw:"六",hol:1,ex:R(55,360,"穩定長跑55分",1),b:OAT("長跑後補充"),l:null,d:DAN()},
+   {dt:"8/16",dw:"日",hol:1,ex:W(30,120,"量體重！目標~55 kg",1),b:TUNA("量體重！第6週成果"),l:null,d:MCD()}],
+  // W7
+  [{dt:"8/17",dw:"一",hol:0,ex:R(45,295,"拉長到45分！"),b:OAT(),l:LNR("雞胸肉＋豆腐＋炒蛋"),d:HOME()},
+   {dt:"8/18",dw:"二",hol:0,ex:W(30,120,"恢復日"),b:EGG(),l:LB("1/4碗","蒸魚＋青菜×3"),d:HOME()},
+   {dt:"8/19",dw:"三",hol:0,ex:R(45,295,"45分連跑，你已經是跑者了"),b:TUNA(),l:LNR("清蒸魚＋燙青菜×3"),d:HOME()},
+   {dt:"8/20",dw:"四",hol:0,ex:R(40,260,"週四補強跑"),b:OAT(),l:LH("1/4碗","青菜×3＋雞腿（去皮）"),d:HOME()},
+   {dt:"8/21",dw:"五",hol:0,ex:R(45,295,"倒數兩週，最後衝刺！"),b:EGG(),l:LNR("雞胸肉＋炒蛋＋豆腐"),d:HOME()},
+   {dt:"8/22",dw:"六",hol:1,ex:R(60,395,"長跑60分！里程碑達成",1),b:OAT("長跑後一定要吃！"),l:null,d:DAN()},
+   {dt:"8/23",dw:"日",hol:1,ex:W(30,120,"量體重！目標~54 kg",1),b:TUNA("量體重！第7週，快到了！"),l:null,d:MCD()}],
+  // W8
+  [{dt:"8/24",dw:"一",hol:0,ex:R(45,295,"最後一週！每跑一次都是勝利"),b:OAT(),l:LNR("雞胸肉＋豆腐＋炒蛋"),d:HOME()},
+   {dt:"8/25",dw:"二",hol:0,ex:W(30,120,"最後一週也不鬆懈"),b:EGG(),l:LB("1/4碗","清蒸魚＋青菜×3"),d:HOME()},
+   {dt:"8/26",dw:"三",hol:0,ex:R(45,295,"中段不放鬆，繼續燃！"),b:TUNA(),l:LNR("滷雞腿（去皮）＋燙青菜×3"),d:HOME()},
+   {dt:"8/27",dw:"四",hol:0,ex:R(45,295,"倒數三天！"),b:OAT(),l:LNR("雞胸肉＋炒蛋＋豆腐"),d:HOME()},
+   {dt:"8/28",dw:"五",hol:0,ex:R(45,295,"最後一個週五跑，享受它！"),b:EGG(),l:LH("1/4碗","青菜×3＋雞胸肉"),d:HOME()},
+   {dt:"8/29",dw:"六",hol:1,ex:R(60,395,"最終長跑60分！",1),b:OAT("吃飽，明天就是驗收日！"),l:null,d:DAN("辛苦了！最後假日晚餐")},
+   {dt:"8/30",dw:"日",hol:1,ex:W(30,120,"早上空腹健走，然後量體重！",1),b:TUNA("🎯 早上空腹量體重！目標 53 kg 達標！"),l:null,d:MCD("恭喜完成8週！今天開心吃！")}]
+];
+
+// ── STATE ──────────────────────────────────────────
+let cur=0;
+let startX=0,startY=0;
+
+// ── INIT ───────────────────────────────────────────
+function init(){
+  buildStrip();
+  adjustPadding();
+  render(0);
+  window.addEventListener('resize',adjustPadding);
+  // swipe
+  const sa=document.getElementById('scroll-area');
+  sa.addEventListener('touchstart',e=>{startX=e.touches[0].clientX;startY=e.touches[0].clientY},{passive:true});
+  sa.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-startX;
+    const dy=e.changedTouches[0].clientY-startY;
+    if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){
+      if(dx<0&&cur<7)sw(cur+1);
+      else if(dx>0&&cur>0)sw(cur-1);
+    }
+  },{passive:true});
+}
+
+function adjustPadding(){
+  const h=document.querySelector('.topbar').offsetHeight;
+  document.getElementById('scroll-area').style.paddingTop=h+'px';
+}
+
+function buildStrip(){
+  const strip=document.getElementById('wstrip');
+  strip.innerHTML='';
+  WMETA.forEach((m,i)=>{
+    if(i===4){
+      const sep=document.createElement('div');
+      sep.className='wbtn-sep';
+      strip.appendChild(sep);
+    }
+    const b=document.createElement('button');
+    b.className='wbtn'+(i===0?' on':'');
+    b.id='wb'+i;
+    b.innerHTML=`<span class="wbtn-n">${m.w}</span><span class="wbtn-kg">${m.kg}</span>`;
+    b.onclick=()=>sw(i);
+    strip.appendChild(b);
+  });
+}
+
+function sw(n){
+  document.getElementById('wb'+cur).classList.remove('on');
+  cur=n;
+  document.getElementById('wb'+n).classList.add('on');
+  // scroll week button into view
+  document.getElementById('wb'+n).scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  render(n);
+  document.getElementById('scroll-area').scrollTop=0;
+}
+
+// ── RENDER ─────────────────────────────────────────
+function render(n){
+  const m=WMETA[n];
+  document.getElementById('tb-sub').textContent=`${m.d}・目標 ${m.kg}`;
+  const si=document.getElementById('scroll-inner');
+  let h='';
+
+  // legend (only week 1)
+  if(n===0){
+    h+=`<div class="lgnd">
+      <div class="lc"><div class="ldot" style="background:#16a34a"></div>運動日</div>
+      <div class="lc"><div class="ldot" style="background:#7c3aed"></div>假日</div>
+      <div class="lc"><div class="ldot" style="background:#9d174d"></div>義美燕麥</div>
+      <div class="lc"><div class="ldot" style="background:#d97706"></div>薯條注意</div>
+      <div class="lc" style="color:#aaa">← 左右滑動換週 →</div>
+    </div>`;
+  }
+
+  // phase 2 banner
+  if(n===4){
+    h+=`<div class="p2">
+      <div class="p2-title">進入第二個月・最後衝刺！</div>
+      <div class="p2-sub">飯量維持1/4碗，部分日改無澱粉午餐，運動拉長至40–60分鐘。</div>
+      <div class="p2-stats">
+        <div class="p2s"><span class="p2s-l">目前</span><span class="p2s-v">~56kg</span></div>
+        <div class="p2s"><span class="p2s-l">目標</span><span class="p2s-v">53kg</span></div>
+        <div class="p2s"><span class="p2s-l">還差</span><span class="p2s-v">~3kg</span></div>
+        <div class="p2s"><span class="p2s-l">剩餘</span><span class="p2s-v">4週</span></div>
+      </div>
+    </div>`;
+  }
+
+  // focus
+  h+=`<div class="focus-card"><div class="focus-text">${FOCUS[n]}</div></div>`;
+
+  // days
+  WEEKS[n].forEach((d,i)=>{
+    const id=`d${n}_${i}`;
+    const mt=d.b.c+(d.l?d.l.c:0)+d.d.c;
+    const isEx=d.ex.type!=='rest';
+    h+=dayCard(d,id,mt,isEx,i===0);
+  });
+
+  si.innerHTML=h;
+}
+
+function dayCard(d,id,mt,isEx,openDefault){
+  const hcls=(d.hol?' hol':'')+(isEx?' exd':'');
+  const dtag=d.hol?`<span class="tag t-hol">假日</span>`:`<span class="tag t-work">上班</span>`;
+  const etag=isEx?`<span class="tag t-ex">${d.ex.label}</span>`:`<span class="tag t-rest">休息</span>`;
+  const nrtag=d.l&&d.l.norice?`<span class="tag t-norice">無澱粉</span>`:'';
+  const burnTxt=isEx?`<span class="burn-kcal">−${d.ex.burn}🔥</span>`:'';
+  const net=mt-d.ex.burn;
+  const netTxt=isEx?`<span class="net-kcal">淨 ${net}</span>`:'';
+  const op=openDefault?' op':'';
+
+  return `<div class="dc${hcls}">
+    <div class="dh" onclick="tog('${id}')">
+      <div class="date-col">
+        <div class="date-n">${d.dt}</div>
+        <div class="date-w">${d.dw}</div>
+      </div>
+      <div class="mid-col">
+        <div class="tags">${dtag}${etag}${nrtag}</div>
+        <div class="cal-row">
+          <span class="meal-kcal">${mt} kcal</span>
+          ${burnTxt}${netTxt}
+        </div>
+      </div>
+      <div class="chev${op}" id="cv${id}">▾</div>
+    </div>
+    <div class="db${op}" id="db${id}">
+      ${exBlock(d.ex)}
+      ${mealRow('early',d.b)}
+      ${d.l?mealRow('lunch',d.l):skipLunch()}
+      ${mealRow('dinner',d.d)}
+      ${sumBar(mt,d.ex)}
+    </div>
+  </div>`;
+}
+
+function exBlock(ex){
+  if(ex.type==='rest') return `<div class="exb rest-t" style="display:flex;align-items:center;gap:10px;padding:12px 14px"><div class="ex-ic rest-c"><svg viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"><path d="M2 12h5l2-8 4 16 2-8h5"/></svg></div><span style="font-size:13px;color:#9ca3af">今日休息・恢復同樣重要</span></div>`;
+  const isR=ex.type==='run',isW=ex.type==='walk';
+  const bg=isR?'#16a34a':isW?'#2563eb':'#16a34a';
+  const tc=isR?'color:#15803d':isW?'color:#1d4ed8':'color:#15803d';
+  const tcls=isR?'run-t':isW?'walk-t':'wr-t';
+  const ico=isR?I.run:isW?I.walk:I.run;
+  return `<div class="exb ${tcls}">
+    <div class="ex-row">
+      <div class="ex-ic" style="background:${bg}">${ico}</div>
+      <div class="ex-info">
+        <div class="ex-name" style="${tc}">${ex.label}</div>
+        ${ex.time?`<div class="ex-time" style="${tc}">${ex.time}</div>`:''}
+      </div>
+    </div>
+    <div class="ex-chips">
+      <div class="exch"><span class="exch-l">時間</span><span class="exch-v">${ex.dur} 分鐘</span></div>
+      <div class="exch"><span class="exch-l">消耗</span><span class="exch-v burn">−${ex.burn} kcal</span></div>
+    </div>
+    ${ex.note?`<div class="ex-note" style="${tc}">${ex.note}</div>`:''}
+  </div>`;
+}
+
+function mealRow(type,m){
+  const cls=type==='early'?'mb-ic':type==='lunch'?'ml-ic':'md-ic';
+  const ico=type==='early'?I.coffee:type==='lunch'?I.salad:I.home;
+  const lb=type==='early'?'早餐':type==='lunch'?'午餐':'晚餐';
+  const oat=m.oat?`<span class="oat">義美燕麥</span>`:'';
+  const tip=m.tip?`<span class="mtip">${I.info}${m.tip}</span>`:'';
+  const warn=m.warn?`<span class="mwarn">${I.warn}${m.warn}</span>`:'';
+  return `<div class="mr">
+    <div class="mic ${cls}">${ico}</div>
+    <div class="mi">
+      <div class="mlb">${lb}</div>
+      <div class="mn">${m.t}${oat}</div>
+      <div class="mm"><span class="mkcal">${m.c} kcal</span>${tip}${warn}</div>
+    </div>
+  </div>`;
+}
+
+function skipLunch(){
+  return `<div class="mr"><div class="mic ms-ic">${I.moon}</div><div class="mi"><div class="mlb">午餐</div><div class="skip-n">假日不吃 ｜ 餓了：茶葉蛋×1（≈70 kcal）</div></div></div>`;
+}
+
+function sumBar(mt,ex){
+  const isEx=ex.type!=='rest';
+  const net=mt-ex.burn;
+  return `<div class="dsum">
+    <span class="dsi">飲食 <b>${mt} kcal</b></span>
+    ${isEx?`<span class="dsi">消耗 <b>−${ex.burn} kcal</b></span><span class="dsi net">淨攝入 <b>${net} kcal</b></span>`:''}
+  </div>`;
+}
+
+function tog(id){
+  const b=document.getElementById('db'+id);
+  const c=document.getElementById('cv'+id);
+  const o=b.classList.toggle('op');
+  c.classList.toggle('op',o);
+}
+
+init();
+</script>
+
+
+</body></html>
